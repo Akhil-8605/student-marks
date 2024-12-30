@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/github.io/student-marks/static/css/main.0c2ba835.css",
+    "main.js": "/github.io/student-marks/static/js/main.46467ade.js",
+    "static/js/223.e9e9e087.chunk.js": "/github.io/student-marks/static/js/223.e9e9e087.chunk.js",
+    "static/js/453.ebf436b9.chunk.js": "/github.io/student-marks/static/js/453.ebf436b9.chunk.js",
+    "static/media/schoollogo.jpg": "/github.io/student-marks/static/media/schoollogo.b13651b656ed2e880e3a.jpg",
+    "index.html": "/github.io/student-marks/index.html",
+    "main.0c2ba835.css.map": "/github.io/student-marks/static/css/main.0c2ba835.css.map",
+    "main.46467ade.js.map": "/github.io/student-marks/static/js/main.46467ade.js.map",
+    "223.e9e9e087.chunk.js.map": "/github.io/student-marks/static/js/223.e9e9e087.chunk.js.map",
+    "453.ebf436b9.chunk.js.map": "/github.io/student-marks/static/js/453.ebf436b9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0c2ba835.css",
+    "static/js/main.46467ade.js"
+  ]
+}
