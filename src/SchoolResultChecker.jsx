@@ -8,35 +8,35 @@ import { click } from '@testing-library/user-event/dist/click';
 
 export default function SchoolResultChecker() {
 
-    // useEffect(() => {
-    //     // Condition 1: Warn on page reload
-    //     const handleBeforeUnload = (event) => {
-    //         event.preventDefault();
-    //         event.returnValue = "If you reload, you may lose your data...";
-    //     };
+    useEffect(() => {
+        // Condition 1: Warn on page reload
+        const handleBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = "If you reload, you may lose your data...";
+        };
 
-    //     window.addEventListener('beforeunload', handleBeforeUnload);
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
-    //     // Condition 2: Check for slow internet connection
-    //     const checkInternetSpeed = () => {
-    //         const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    //         if (connection && connection.effectiveType) {
-    //             // Adjust "slow" threshold based on your requirement
-    //             const slowConnections = ['slow-2g', '2g', '3g'];
-    //             if (slowConnections.includes(connection.effectiveType)) {
-    //                 alert("Your internet is too slow; you may lose data if you continue.");
-    //             }
-    //         }
-    //     };
+        // Condition 2: Check for slow internet connection
+        const checkInternetSpeed = () => {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (connection && connection.effectiveType) {
+                // Adjust "slow" threshold based on your requirement
+                const slowConnections = ['slow-2g', '2g', '3g'];
+                if (slowConnections.includes(connection.effectiveType)) {
+                    alert("Your internet is too slow; you may lose data if you continue.");
+                }
+            }
+        };
 
-    //     // Run once on mount
-    //     checkInternetSpeed();
+        // Run once on mount
+        checkInternetSpeed();
 
-    //     // Cleanup event listener on unmount
-    //     return () => {
-    //         window.removeEventListener('beforeunload', handleBeforeUnload);
-    //     };
-    // }, []);
+        // Cleanup event listener on unmount
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
 
     const [students, setStudents] = useState([]);
     const [newStudent, setNewStudent] = useState({ name: '' });
@@ -301,8 +301,8 @@ export default function SchoolResultChecker() {
             subjects.forEach((subject) => {
                 const theory = student[`${subject}Theory`] || '';
                 const practical = student[`${subject}Practical`] || '';
-                const total = Number(theory) + Number(practical) || 'NaN';
-                const grade = calculateGrade(total) || 'NaN';
+                const total = Number(theory) + Number(practical) || ' ';
+                const grade = calculateGrade(total) || ' ';
                 row.push(theory, practical, total, grade);
             });
             row.push(
@@ -316,12 +316,12 @@ export default function SchoolResultChecker() {
         });
 
         worksheet.columns.forEach((column) => {
-            let maxWidth = 10;
+            let maxLength = 0;
             column.eachCell({ includeEmpty: true }, (cell) => {
-                const cellText = cell.value ? cell.value.toString() : '';
-                maxWidth = Math.max(maxWidth, cellText.length);
+                const cellValue = cell.value ? cell.value.toString() : ''; // Handle undefined or null values
+                maxLength = Math.max(maxLength, cellValue.length);
             });
-            column.width = maxWidth + 2;
+            column.width = maxLength + 2; // Add some padding for readability
         });
 
         const lastRow = worksheet.lastRow.number;
@@ -437,9 +437,7 @@ export default function SchoolResultChecker() {
             };
         });
 
-        worksheet.getRow(subHeaderRowIndex).eachCell({ includeEmpty: true }, (cell, colNumber) => {
-            lastColumnIndex = Math.max(lastColumnIndex, colNumber); // Track the last column with data
-        });
+
         // The row where you want to apply the thick border (A5)
         let lastColumnIndex = 1; // Start from the first column
 
@@ -451,6 +449,20 @@ export default function SchoolResultChecker() {
                 bottom: { style: 'thick' },
                 left: { style: col === 1 ? 'thick' : undefined }, // Thick left border for the first cell
                 right: { style: col === lastColumnIndex ? 'thick' : undefined }, // Thick right border for the last cell
+            };
+        }
+
+        const lastColumnIndexHeader = worksheet.getRow(5).actualCellCount; // Finds the actual cell count for row 5
+        const lastColumnLetterHeader = columnToLetter(lastColumnIndexHeader); // Convert column index to letter
+
+        // Apply thick borders to the entire row from A5 to the last column
+        for (let col = 1; col <= lastColumnIndexHeader; col++) {
+            const cell = worksheet.getCell(5, col);
+            cell.border = {
+                top: { style: 'thick' },
+                bottom: { style: 'thick' },
+                left: { style: col === 1 ? 'thick' : 'thick' }, // Thick left border for the first cell
+                right: { style: col === lastColumnIndexHeader ? 'thick' : 'thick' }, // Thick right border for the last cell
             };
         }
 
